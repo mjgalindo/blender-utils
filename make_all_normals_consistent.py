@@ -5,8 +5,8 @@ scene_file = sys.argv[sys.argv.index('--')+1]
 
 bpy.ops.wm.open_mainfile(filepath=scene_file)
 
-obj_objects = bpy.context.selected_objects[:]
-for obj in obj_objects:
+mesh_objects = [o for o in bpy.data.objects if o.type == 'MESH']
+for obj in mesh_objects:
     bpy.ops.object.select_all(action='DESELECT')
     obj.select = True
     bpy.context.scene.objects.active = obj
@@ -18,4 +18,4 @@ for obj in obj_objects:
     bpy.ops.mesh.normals_make_consistent(inside=False)
     # go object mode again
     bpy.ops.object.editmode_toggle()
-bpy.ops.wm.save_as_mainfile(filepath=scene_file+"done.blend")
+bpy.ops.wm.save_as_mainfile(filepath=scene_file)

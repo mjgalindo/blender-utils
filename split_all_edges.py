@@ -12,7 +12,6 @@ bpy.ops.object.select_all(action='DESELECT')
 mesh_objects = [o for o in bpy.data.objects if o.type == 'MESH']
 meshes = set(o.data for o in mesh_objects)
 for ob in mesh_objects:
-    scene.objects.active = ob
     if not getattr(ob.data.polygons[0], "use_smooth"):
         ob.select = True
         bpy.ops.object.mode_set(mode='EDIT')
