@@ -6,7 +6,6 @@ context = bpy.context
 scene = context.scene
 
 scene_file = sys.argv[sys.argv.index('--')+1]
-print("HISAF", flush=True)
 bpy.ops.wm.open_mainfile(filepath=scene_file)
 print(len(bpy.data.materials))
 for mat in bpy.data.materials:
