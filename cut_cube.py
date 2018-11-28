@@ -34,8 +34,9 @@ def get_gt(scene_file, center, radius):
 
     # Export what's left
     bpy.ops.object.mode_set(mode='OBJECT')
-    bpy.ops.export_mesh.ply(filepath=scene_file[:scene_file.rfind('.')]+'.ply')
-
+    cube_file = scene_file[:scene_file.rfind('.')]+'_cube.ply'
+    bpy.ops.export_mesh.ply(filepath=cube_file)
+    print(f'|||{cube_file}|||')
 
 if __name__ == '__main__':
     sys.argv = sys.argv[sys.argv.index('--'):]
