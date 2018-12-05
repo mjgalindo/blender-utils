@@ -13,6 +13,7 @@ import bmesh
 @click.option('--radius', default=1.0, type=float)
 def get_gt(scene_file, center, radius):
     bpy.ops.wm.open_mainfile(filepath=scene_file)
+    bpy.context.scene.world.horizon_color = np.array([148,128,128])/255
 
     # Join the whole scene as a single mesh
     bpy.context.scene.objects.active = bpy.data.objects[0]
