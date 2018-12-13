@@ -15,37 +15,39 @@ bpy.ops.object.delete()
 @click.argument('ply_file')
 @click.argument('output_file')
 @click.option('--color', nargs=3, default=[95, 200, 221], type=int)
-def render_geometry(ply_file, output_file, color):
+@click.option('--bg', nargs=3, default=[158, 158, 158], type=int)
+@click.option('--campos', nargs=3, default=[0, 0, 1.5], type=float)
+@click.option('--lightpos', nargs=3, default=[0, 0, 1.5], type=float)
+@click.option('--camrot', nargs=3, default=[0, 0, 0], type=float)
+@click.option('--ortho_scale', default=1.6, type=float)
+def render_geometry(ply_file, output_file, color, bg, campos, lightpos, camrot, ortho_scale):
     # create a new world
     # print(dir(bpy.context.scene.world))
-    bpy.context.scene.world.horizon_color = np.array([158, 158, 158])/255
-    scn = bpy.context.scene
+    bpy.context.scene.world.horizon_color = np.array(bg)/255
 
     bpy.ops.import_mesh.ply(filepath=ply_file)
     bpy.ops.material.new()
     mat = bpy.data.materials["Material"]
     mat.diffuse_color = np.array(color)/255
     bpy.context.scene.objects[0].active_material = mat
-    camera_pos = [0, 0, 1.5]
-    light_pos = [0, 0, 2.5]
 
     # Add a camera fish eye.
     bpy.context.scene.render.engine = 'CYCLES'
-    bpy.ops.object.camera_add(view_align=True, location=camera_pos)
-    bpy.context.object.rotation_euler[0] = 0
-    bpy.context.object.rotation_euler[1] = 0
-    bpy.context.object.rotation_euler[2] = 0
+    bpy.ops.object.camera_add(view_align=True, location=campos)
+    bpy.data.cameras[0].type = 'ORTHO'
+    bpy.data.cameras[0].ortho_scale = ortho_scale
+    bpy.context.object.rotation_euler = camrot
     bpy.context.scene.frame_start = 1
     bpy.context.scene.frame_end = 1
     bpy.context.scene.camera = bpy.context.object
 
     # Add a lamp.
-    bpy.ops.object.lamp_add(type='POINT', view_align=False, location=light_pos)
-    bpy.context.object.data.cycles.cast_shadow = True
+    bpy.ops.object.lamp_add(type='POINT', view_align=False, location=lightpos)
+    bpy.context.object.data.cycles.cast_shadow = False
 
     # Set the rendering parameter
-    bpy.context.scene.render.resolution_x = 1024 / 2
-    bpy.context.scene.render.resolution_y = 1024 / 2
+    bpy.context.scene.render.resolution_x = 1024
+    bpy.context.scene.render.resolution_y = 1024
     bpy.context.scene.render.resolution_percentage = 50
     bpy.context.scene.render.pixel_aspect_x = 1
     bpy.context.scene.render.pixel_aspect_y = 1
