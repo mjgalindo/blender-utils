@@ -43,12 +43,12 @@ def render_geometry(ply_file, output_file, color, bg, campos, lightpos, camrot, 
 
     # Add a lamp.
     bpy.ops.object.lamp_add(type='POINT', view_align=False, location=lightpos)
-    bpy.context.object.data.cycles.cast_shadow = False
+    bpy.context.object.data.cycles.cast_shadow = True
 
     # Set the rendering parameter
     bpy.context.scene.render.resolution_x = 1024
     bpy.context.scene.render.resolution_y = 1024
-    bpy.context.scene.render.resolution_percentage = 50
+    bpy.context.scene.render.resolution_percentage = 80
     bpy.context.scene.render.pixel_aspect_x = 1
     bpy.context.scene.render.pixel_aspect_y = 1
     bpy.context.scene.render.use_file_extension = True
