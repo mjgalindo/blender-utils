@@ -12,7 +12,8 @@ import bmesh
 @click.argument('scene_file')
 @click.option('--center', default=[0, 0, 0], nargs=3, type=float)
 @click.option('--radius', default=1.0, type=float)
-def get_gt(scene_file, center, radius):
+@click.option('--out_file', default="", type=str)
+def get_gt(scene_file, center, radius, out_file):
     bpy.ops.wm.open_mainfile(filepath=scene_file)
 
     # Join the whole scene as a single mesh
@@ -48,12 +49,21 @@ def get_gt(scene_file, center, radius):
         bmesh.ops.triangulate(
             bm, faces=bm.faces[:], quad_method=0, ngon_method=0)
         # Finish up, write the bmesh back to the mesh
+        for f in bm.faces:
+            f.smooth = True
         bm.to_mesh(me)
         bm.free()
+        obj.select = True
+        bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+        bpy.ops.mesh.select_all(action='SELECT')
+        bpy.ops.mesh.remove_doubles()
+        bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+        obj.select = False        
 
-    cube_file = scene_file[:scene_file.rfind('.')]+'_cube.ply'
-    bpy.ops.export_mesh.ply(filepath=cube_file)
-    print(f'|||{cube_file}|||')
+    if out_file == '':
+        out_file = scene_file[:scene_file.rfind('.')]+'_cube.ply'
+    bpy.ops.export_mesh.ply(filepath=out_file)
+    print(f'|||{out_file}|||')
 
 
 if __name__ == '__main__':
