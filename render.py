@@ -19,7 +19,7 @@ def render_scene(scene_file, output_file):
     else:
         bpy.context.scene.objects['grid_wall'].hide_render = True
  
-    bpy.context.scene.objects['hidden_geometry'].active_material.diffuse_color = [110/255,95/255,221/255]
+    bpy.context.scene.objects['hidden_geometry'].active_material.diffuse_color = [60/255,80/255,220/255]
 
     camera_pos = np.array((0.0, 2, 0)) + (np.array(bpy.context.scene.objects["hidden_geometry"].location) if "hidden_geometry" in bpy.context.scene.objects else 0)
     camera_pos[2] = 0
