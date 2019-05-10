@@ -37,7 +37,7 @@ def render_scene(scene_file, output_file):
     near_position = (np.array(bpy.context.scene.objects["hidden_geometry"].location)
                      if "hidden_geometry" in bpy.context.scene.objects else np.array([0, -0.25, 0]))
     camera_pos = np.array((0.0, 2, 0)) + base_position
-    render_close_object = True
+    render_close_object = False
     if render_close_object:
         bpy.context.scene.cycles.film_transparent = True
         camera_pos[1] = camera_pos[1] - 1.0
