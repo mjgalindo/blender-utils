@@ -23,8 +23,9 @@ def render_scene(scene_file, output_file):
     bpy.context.scene.world.horizon_color = [0.0, 0.0, 0.0]
     bpy.context.scene.world.use_nodes = True
     bpy.context.scene.world.cycles_visibility.camera = False
-    bpy.context.scene.objects['hidden_geometry'].active_material.diffuse_color = [
-        0.235, 0.314, 0.863]
+    hidden_color = [0.235, 0.314, 0.863]
+    bpy.context.scene.objects['hidden_geometry'].active_material.diffuse_color = hidden_color
+    
     bpy.data.materials['full_lambertian_walls'].diffuse_color = [
         0.35, 0.35, 0.35]
     # bpy.context.scene.objects['hidden_geometry'].active_material.diffuse_intensity = 0.9
@@ -47,6 +48,15 @@ def render_scene(scene_file, output_file):
 
     # Add a camera fish eye.
     bpy.context.scene.render.engine = 'CYCLES'
+    if "_ward_" in scene_file:
+        print("USING SPECULAR MATERIAL")
+        bpy.context.scene.objects['hidden_geometry'].active_material.use_nodes = True
+        tree = bpy.context.scene.objects['hidden_geometry'].active_material.node_tree
+        tree.nodes.remove(tree.nodes[1])
+        glossy = tree.nodes.new("ShaderNodeBsdfGlossy")
+        glossy.inputs[0].default_value = hidden_color + [1]
+        tree.links.new(glossy.outputs[0], tree.nodes[0].inputs[0])
+
     bpy.ops.object.camera_add(view_align=True, location=camera_pos)
     bpy.context.object.rotation_euler[0] = camera_rot[0]
     bpy.context.object.rotation_euler[1] = camera_rot[1]
